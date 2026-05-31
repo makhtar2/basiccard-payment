@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Systeme de paiement BasicCard en FCFA</title>
+  <style>
+    @page { size: 16in 9in; margin: 0; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: #10201a;
+      background: #f4f7f4;
+    }
+    .slide {
+      width: 16in;
+      height: 9in;
+      page-break-after: always;
+      position: relative;
+      overflow: hidden;
+      padding: .68in .82in;
+      background: #ffffff;
+    }
+    .slide:last-child { page-break-after: auto; }
+    .cover {
+      color: white;
+      background:
+        linear-gradient(90deg, #fcd116 0 15%, transparent 15% 85%, #ce1126 85% 100%),
+        linear-gradient(135deg, #007a3d, #034f2a);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    .cover h1 {
+      font-size: 66px;
+      line-height: 1.05;
+      margin: 0 0 22px;
+      letter-spacing: 0;
+    }
+    .cover p { font-size: 28px; margin: 0 0 34px; }
+    .pill {
+      display: inline-block;
+      padding: 12px 20px;
+      border-radius: 8px;
+      background: #10201a;
+      color: white;
+      font-weight: 700;
+      margin: 0 8px;
+      font-size: 18px;
+    }
+    h2 {
+      margin: 0 0 28px;
+      color: #007a3d;
+      font-size: 44px;
+    }
+    h3 { margin: 0 0 10px; font-size: 24px; color: #007a3d; }
+    p, li { font-size: 24px; line-height: 1.38; }
+    ul, ol { margin: 0; padding-left: 30px; }
+    li { margin: 10px 0; }
+    .grid { display: grid; gap: 24px; }
+    .two { grid-template-columns: 1fr 1fr; }
+    .three { grid-template-columns: repeat(3, 1fr); }
+    .card {
+      background: #eaf7ef;
+      border: 2px solid #c6e9d3;
+      border-left: 8px solid #007a3d;
+      border-radius: 8px;
+      padding: 24px;
+      min-height: 150px;
+    }
+    .metric {
+      background: #10201a;
+      color: white;
+      border-radius: 8px;
+      padding: 22px;
+      text-align: center;
+    }
+    .metric strong { display: block; color: #fcd116; font-size: 34px; }
+    .diagram {
+      height: 430px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 36px;
+    }
+    .node {
+      width: 260px;
+      min-height: 130px;
+      padding: 24px;
+      border-radius: 8px;
+      background: #eaf7ef;
+      border: 3px solid #007a3d;
+      text-align: center;
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .arrow { font-size: 44px; color: #ce1126; font-weight: 900; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 22px;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+    th {
+      background: #007a3d;
+      color: white;
+      text-align: left;
+      padding: 16px;
+    }
+    td {
+      border-bottom: 1px solid #d7e7dc;
+      padding: 15px 16px;
+      background: #f8fbf9;
+    }
+    pre {
+      margin: 0;
+      padding: 22px;
+      border-radius: 8px;
+      background: #101820;
+      color: white;
+      font: 20px/1.38 Consolas, "Courier New", monospace;
+      white-space: pre-wrap;
+    }
+    .ticket {
+      background: #101820;
+      color: #fff;
+      border-left: 8px solid #fcd116;
+      font: 24px/1.45 Consolas, "Courier New", monospace;
+      padding: 28px;
+      border-radius: 8px;
+    }
+    .footer {
+      position: absolute;
+      left: .82in;
+      right: .82in;
+      bottom: .34in;
+      display: flex;
+      justify-content: space-between;
+      color: #577064;
+      font-size: 15px;
+      border-top: 1px solid #dbe9df;
+      padding-top: 10px;
+    }
+    .thanks {
+      background: #10201a;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      flex-direction: column;
+    }
+    .thanks h2 { color: white; font-size: 72px; margin-bottom: 14px; }
+    .accent { color: #ce1126; font-weight: 800; }
+  </style>
+</head>
+<body>
+  <section class="slide cover">
+    <h1>Systeme de paiement<br>BasicCard en FCFA</h1>
+    <p>Carte a puce programmable et terminal de paiement pour le Senegal</p>
+    <div><span class="pill">Senegal</span><span class="pill">PIN securise</span><span class="pill">Ticket FCFA</span></div>
+  </section>
+
+  <section class="slide">
+    <h2>Contexte du projet</h2>
+    <div class="grid two">
+      <div class="card">
+        <h3>Idee generale</h3>
+        <p>Simuler un systeme de paiement par carte a puce avec BasicCard, un terminal et une monnaie locale : le FCFA.</p>
+      </div>
+      <div class="card">
+        <h3>Pourquoi ce sujet ?</h3>
+        <p>Le projet montre comment une carte peut stocker un solde, verifier un PIN et valider une transaction.</p>
+      </div>
+    </div>
+    <div class="grid three" style="margin-top:28px">
+      <div class="metric"><strong>FCFA</strong>Monnaie utilisee</div>
+      <div class="metric"><strong>1234</strong>PIN de test</div>
+      <div class="metric"><strong>10000</strong>Solde initial</div>
+    </div>
+    <div class="footer"><span>BasicCard FCFA</span><span>2</span></div>
+  </section>
+
+  <section class="slide">
+    <h2>Objectifs</h2>
+    <div class="grid two">
+      <div class="card">
+        <h3>Objectifs techniques</h3>
+        <ul>
+          <li>Programmer une carte BasicCard.</li>
+          <li>Declarer des commandes APDU.</li>
+          <li>Stocker des donnees en EEPROM.</li>
+          <li>Compiler et tester avec ZCMSim.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Objectifs fonctionnels</h3>
+        <ul>
+          <li>Verifier le PIN.</li>
+          <li>Consulter le solde.</li>
+          <li>Payer et recharger en FCFA.</li>
+          <li>Afficher un ticket de paiement.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer"><span>BasicCard FCFA</span><span>3</span></div>
+  </section>
+
+  <section class="slide">
+    <h2>Architecture</h2>
+    <div class="diagram">
+      <div class="node">Utilisateur<br><small>PIN + montant</small></div>
+      <div class="arrow">→</div>
+      <div class="node">Terminal<br><small>MonTerminal.bas</small></div>
+      <div class="arrow">↔</div>
+      <div class="node">Carte<br><small>MaCarte.bas</small></div>
+    </div>
+    <div class="card">
+      <h3>Simulation</h3>
+      <p>Le simulateur <strong>ZCMSim</strong> relie la carte et le terminal sur le lecteur virtuel <strong>201</strong>.</p>
+    </div>
+    <div class="footer"><span>BasicCard FCFA</span><span>4</span></div>
+  </section>
+
+  <section class="slide">
+    <h2>Structure du projet</h2>
+    <table>
+      <tr><th>Fichier</th><th>Role</th></tr>
+      <tr><td>src/card/MaCarte.bas</td><td>Programme embarque dans la carte.</td></tr>
+      <tr><td>src/terminal/MonTerminal.bas</td><td>Terminal, menu utilisateur et ticket.</td></tr>
+      <tr><td>compiler.bat</td><td>Compile la carte et le terminal.</td></tr>
+      <tr><td>lancer.bat</td><td>Lance la simulation BasicCard.</td></tr>
+      <tr><td>docs/protocole.md</td><td>Explique le protocole APDU.</td></tr>
+      <tr><td>docs/explication-projet.md</td><td>Document d'explication pour la soutenance.</td></tr>
+    </table>
+    <div class="footer"><span>BasicCard FCFA</span><span>5</span></div>
+  </section>
+
+  <section class="slide">
+    <h2>Fonctionnalites</h2>
+    <div class="grid three">
+      <div class="card"><h3>Paiement</h3><p>Debit d'un montant en FCFA si le solde est suffisant.</p></div>
+      <div class="card"><h3>Rechargement</h3><p>Credit d'un montant positif sur la carte.</p></div>
+      <div class="card"><h3>Securite</h3><p>PIN obligatoire et blocage apres 3 mauvais codes.</p></div>
+    </div>
+    <div class="grid two" style="margin-top:28px">
+      <div class="card"><h3>Solde</h3><p>Le solde est stocke dans la carte en EEPROM.</p></div>
+      <div class="card"><h3>Ticket</h3><p>Un ticket est affiche apres chaque paiement accepte.</p></div>
+    </div>
+    <div class="footer"><span>BasicCard FCFA</span><span>6</span></div>
+  </section>
+
+  <section class="slide">
+    <h2>Protocole APDU</h2>
+    <table>
+      <tr><th>CLA</th><th>INS</th><th>Commande</th><th>Role</th></tr>
+      <tr><td>80</td><td>10</td><td>GetBalance(PIN, Solde)</td><td>Consulter le solde</td></tr>
+      <tr><td>80</td><td>20</td><td>Debit(PIN, Montant, Solde)</td><td>Payer en FCFA</td></tr>
+      <tr><td>80</td><td>30</td><td>Credit(PIN, Montant, Solde)</td><td>Recharger la carte</td></tr>
+    </table>
+    <div class="card" style="margin-top:28px">
+      <h3>Codes retour</h3>
+      <p><strong>9000</strong> succes, <strong>6B01</strong> solde insuffisant, <strong>6B02</strong> montant invalide, <strong>6B03</strong> PIN incorrect, <strong>6B04</strong> carte bloquee.</p>
+    </div>
+    <div class="footer"><span>BasicCard FCFA</span><span>7</span></div>
+  </section>
+
+  <section class="slide">
+    <h2>Securite du PIN</h2>
+    <div class="grid two">
+      <div class="card">
+        <h3>Principe</h3>
+        <ul>
+          <li>Le PIN est verifie dans la carte.</li>
+          <li>Chaque erreur augmente un compteur.</li>
+          <li>A 3 erreurs, la carte se bloque.</li>
+          <li>Un PIN correct remet le compteur a zero.</li>
+        </ul>
+      </div>
+      <pre>If PinSaisi &lt;&gt; PinCode Then
+    PinErrors = PinErrors + 1
+    If PinErrors &gt;= MaxPinErrors Then
+        CarteBloquee = 1
+        SW1SW2 = swCardBlocked
+        Exit
+    End If
+End If</pre>
+    </div>
+    <div class="footer"><span>BasicCard FCFA</span><span>8</span></div>
+  </section>
+
+  <section class="slide">
+    <h2>Paiement et ticket</h2>
+    <div class="grid two">
+      <div class="card">
+        <h3>Scenario</h3>
+        <ol>
+          <li>L'utilisateur saisit un montant.</li>
+          <li>Le terminal appelle Debit.</li>
+          <li>La carte retire le montant.</li>
+          <li>Le terminal affiche le ticket.</li>
+        </ol>
+      </div>
+      <div class="ticket">---------- TICKET DE PAIEMENT ----------
+Pays      : Senegal
+Monnaie   : FCFA
+Montant   : 500 FCFA
+Statut    : Paiement accepte
+Nouveau solde : 9500 FCFA
+----------------------------------------</div>
+    </div>
+    <div class="footer"><span>BasicCard FCFA</span><span>9</span></div>
+  </section>
+
+  <section class="slide">
+    <h2>Demonstration</h2>
+    <div class="card">
+      <ol>
+        <li>Lancer <strong>compiler.bat</strong>.</li>
+        <li>Lancer <strong>lancer.bat</strong>.</li>
+        <li>Entrer le PIN <strong>1234</strong>.</li>
+        <li>Consulter le solde : <strong>10000 FCFA</strong>.</li>
+        <li>Payer <strong>500 FCFA</strong>.</li>
+        <li>Verifier le ticket et le nouveau solde.</li>
+        <li>Tester 3 mauvais PIN pour montrer le blocage.</li>
+      </ol>
+    </div>
+    <div class="footer"><span>BasicCard FCFA</span><span>10</span></div>
+  </section>
+
+  <section class="slide">
+    <h2>Resultats obtenus</h2>
+    <div class="grid two">
+      <div class="card">
+        <h3>Compilation</h3>
+        <ul>
+          <li>bin/MaCarte.img</li>
+          <li>bin/MonTerminal.exe</li>
+          <li>bin/MonTerminal.img</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Simulation</h3>
+        <ul>
+          <li>Carte detectee.</li>
+          <li>PIN verifie.</li>
+          <li>Paiement execute en FCFA.</li>
+          <li>Ticket affiche.</li>
+          <li>Blocage PIN fonctionnel.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer"><span>BasicCard FCFA</span><span>11</span></div>
+  </section>
+
+  <section class="slide">
+    <h2>Limites et ameliorations</h2>
+    <div class="grid two">
+      <div class="card">
+        <h3>Limites actuelles</h3>
+        <ul>
+          <li>Pas de chiffrement des transactions.</li>
+          <li>Pas d'historique complet.</li>
+          <li>Pas d'identite client/commercant.</li>
+          <li>Pas de connexion bancaire reelle.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Ameliorations possibles</h3>
+        <ul>
+          <li>Code administrateur de deblocage.</li>
+          <li>Historique EEPROM.</li>
+          <li>Nom du client sur la carte.</li>
+          <li>Nom du commercant sur le ticket.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer"><span>BasicCard FCFA</span><span>12</span></div>
+  </section>
+
+  <section class="slide thanks">
+    <h2>Merci</h2>
+    <p>Questions ?</p>
+    <div><span class="pill">BasicCard</span><span class="pill">FCFA</span><span class="pill">Senegal</span></div>
+  </section>
+</body>
+</html>

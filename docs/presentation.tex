@@ -1,0 +1,357 @@
+\documentclass[aspectratio=169,11pt]{beamer}
+
+\usetheme{Madrid}
+\usefonttheme{professionalfonts}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage{lmodern}
+\usepackage{tikz}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{array}
+
+\definecolor{SenegalGreen}{HTML}{007A3D}
+\definecolor{SenegalYellow}{HTML}{FCD116}
+\definecolor{SenegalRed}{HTML}{CE1126}
+\definecolor{Ink}{HTML}{10201A}
+\definecolor{SoftGreen}{HTML}{EAF7EF}
+\definecolor{Panel}{HTML}{F7FAF8}
+\definecolor{CodeBg}{HTML}{101820}
+
+\setbeamercolor{normal text}{fg=Ink,bg=white}
+\setbeamercolor{structure}{fg=SenegalGreen}
+\setbeamercolor{title}{fg=white,bg=SenegalGreen}
+\setbeamercolor{frametitle}{fg=white,bg=SenegalGreen}
+\setbeamercolor{block title}{fg=white,bg=SenegalGreen}
+\setbeamercolor{block body}{fg=Ink,bg=SoftGreen}
+\setbeamercolor{alerted text}{fg=SenegalRed}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{itemize item}{\color{SenegalGreen}$\blacktriangleright$}
+\setbeamertemplate{itemize subitem}{\color{SenegalYellow}$\bullet$}
+
+\setbeamertemplate{footline}{
+  \leavevmode
+  \hbox{
+    \begin{beamercolorbox}[wd=.72\paperwidth,ht=2.4ex,dp=1ex,leftskip=1.2em]{author in head/foot}
+      \color{Ink} Systeme de paiement BasicCard en FCFA
+    \end{beamercolorbox}
+    \begin{beamercolorbox}[wd=.28\paperwidth,ht=2.4ex,dp=1ex,rightskip=1.2em plus1fil]{date in head/foot}
+      \hfill \color{Ink}\insertframenumber/\inserttotalframenumber
+    \end{beamercolorbox}
+  }
+}
+
+\lstdefinelanguage{BasicCard}{
+  morekeywords={Option,Explicit,Const,Eeprom,As,Long,Byte,Command,End,If,Then,ElseIf,Else,Exit,Rem,Declare,Call,Sub,While,Wend,Private,Print,Line,Input},
+  sensitive=false,
+  morecomment=[l]{'},
+  morecomment=[l]{Rem},
+  morestring=[b]"
+}
+
+\lstset{
+  language=BasicCard,
+  basicstyle=\ttfamily\scriptsize\color{white},
+  keywordstyle=\color{SenegalYellow}\bfseries,
+  commentstyle=\color{gray!35},
+  stringstyle=\color{green!45!white},
+  backgroundcolor=\color{CodeBg},
+  breaklines=true,
+  frame=single,
+  rulecolor=\color{SenegalGreen},
+  tabsize=2,
+  showstringspaces=false
+}
+
+\newcommand{\fcfa}{\textsc{FCFA}}
+\newcommand{\tagbox}[2]{
+  \begin{tikzpicture}
+    \node[rounded corners=4pt, fill=#1, text=white, inner xsep=8pt, inner ysep=5pt] {\textbf{#2}};
+  \end{tikzpicture}
+}
+
+\title[BasicCard FCFA]{Systeme de paiement BasicCard en \fcfa}
+\subtitle{Carte a puce, terminal de paiement et simulation pour le Senegal}
+\author{Projet BasicCard}
+\institute{Simulation de paiement electronique}
+\date{\today}
+
+\begin{document}
+
+% --------------------------------------------------------------------
+\begin{frame}[plain]
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[SenegalGreen] (current page.south west) rectangle (current page.north east);
+    \fill[SenegalYellow] (current page.south west) rectangle ([xshift=.18\paperwidth]current page.north west);
+    \fill[SenegalRed] ([xshift=.82\paperwidth]current page.south west) rectangle (current page.north east);
+    \node[align=center,text=white] at (current page.center) {
+      {\Huge\bfseries Systeme de paiement}\\[0.35cm]
+      {\Huge\bfseries BasicCard en FCFA}\\[0.45cm]
+      {\large Carte a puce programmable et terminal de paiement}\\[0.75cm]
+      \tagbox{Ink}{Senegal} \hspace{0.2cm}
+      \tagbox{Ink}{PIN securise} \hspace{0.2cm}
+      \tagbox{Ink}{Ticket de paiement}
+    };
+  \end{tikzpicture}
+\end{frame}
+
+% --------------------------------------------------------------------
+\begin{frame}{Contexte}
+  \begin{columns}[T]
+    \begin{column}{0.54\textwidth}
+      \begin{block}{Idee du projet}
+        Simuler un paiement electronique avec une carte a puce programmable BasicCard et un terminal de paiement.
+      \end{block}
+      \vspace{0.2cm}
+      \begin{itemize}
+        \item Monnaie utilisee : francs CFA.
+        \item Zone cible : Senegal.
+        \item Test sans carte physique grace au simulateur BasicCard.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.42\textwidth}
+      \begin{tikzpicture}[scale=0.95]
+        \fill[Panel] (0,0) rectangle (5.2,3.4);
+        \draw[SenegalGreen, line width=1.2pt, rounded corners=8pt] (.4,.55) rectangle (4.8,2.85);
+        \draw[SenegalYellow, line width=1.2pt] (1,.95) rectangle (2.05,1.65);
+        \node[align=left] at (3.15,1.65) {\textbf{Carte FCFA}\\PIN 1234\\Solde 10000};
+        \node[SenegalGreen] at (2.6,.18) {\small Carte a puce simulee};
+      \end{tikzpicture}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% --------------------------------------------------------------------
+\begin{frame}{Objectifs}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{Objectifs techniques}
+        \begin{itemize}
+          \item Programmer une carte BasicCard.
+          \item Declarer des commandes APDU.
+          \item Stocker un solde en EEPROM.
+          \item Compiler et tester dans ZCMSim.
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{Objectifs fonctionnels}
+        \begin{itemize}
+          \item Verifier le code PIN.
+          \item Consulter le solde.
+          \item Payer en FCFA.
+          \item Recharger la carte.
+          \item Afficher un ticket de paiement.
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% --------------------------------------------------------------------
+\begin{frame}{Architecture}
+  \centering
+  \begin{tikzpicture}[node distance=2.2cm,>=stealth,thick]
+    \tikzstyle{box}=[rounded corners=7pt, draw=SenegalGreen, fill=SoftGreen, minimum width=3.2cm, minimum height=1.15cm, align=center]
+    \node[box] (user) {Utilisateur\\PIN + montant};
+    \node[box, right of=user, xshift=2.5cm] (term) {Terminal\\MonTerminal.bas};
+    \node[box, right of=term, xshift=2.5cm] (card) {Carte\\MaCarte.bas};
+    \node[box, below of=term, yshift=-.25cm] (sim) {ZCMSim\\lecteur virtuel 201};
+
+    \draw[->,SenegalGreen] (user) -- node[above]{saisie} (term);
+    \draw[->,SenegalGreen] (term) -- node[above]{APDU} (card);
+    \draw[->,SenegalGreen] (card) -- node[below]{SW1SW2 + solde} (term);
+    \draw[->,SenegalRed] (sim) -- (term);
+    \draw[->,SenegalRed] (sim) -- (card);
+  \end{tikzpicture}
+\end{frame}
+
+% --------------------------------------------------------------------
+\begin{frame}{Structure du projet}
+  \begin{block}{Fichiers principaux}
+    \begin{tabular}{>{\bfseries}p{0.35\textwidth} p{0.55\textwidth}}
+      src/card/MaCarte.bas & Code embarque dans la carte. \\
+      src/terminal/MonTerminal.bas & Interface terminal et menu utilisateur. \\
+      compiler.bat & Compilation carte, terminal exe et terminal img. \\
+      lancer.bat & Lancement du simulateur avec carte et terminal. \\
+      docs/protocole.md & Description du protocole APDU. \\
+      docs/explication-projet.md & Explication complete pour la soutenance. \\
+    \end{tabular}
+  \end{block}
+\end{frame}
+
+% --------------------------------------------------------------------
+\begin{frame}{Fonctionnalites}
+  \begin{columns}[T]
+    \begin{column}{0.32\textwidth}
+      \begin{block}{Paiement}
+        Debit d'un montant en \fcfa{} si le solde est suffisant.
+      \end{block}
+    \end{column}
+    \begin{column}{0.32\textwidth}
+      \begin{block}{Rechargement}
+        Credit d'un montant positif sur la carte.
+      \end{block}
+    \end{column}
+    \begin{column}{0.32\textwidth}
+      \begin{block}{Securite}
+        PIN obligatoire et blocage apres 3 erreurs.
+      \end{block}
+    \end{column}
+  \end{columns}
+  \vspace{0.45cm}
+  \centering
+  \tagbox{SenegalGreen}{Solde initial : 10000 FCFA}
+  \hspace{0.3cm}
+  \tagbox{SenegalRed}{PIN par defaut : 1234}
+\end{frame}
+
+% --------------------------------------------------------------------
+\begin{frame}{Protocole APDU}
+  \begin{center}
+    \renewcommand{\arraystretch}{1.25}
+    \begin{tabular}{c c p{0.34\textwidth} p{0.25\textwidth}}
+      \textbf{CLA} & \textbf{INS} & \textbf{Commande} & \textbf{Role} \\
+      \hline
+      80 & 10 & GetBalance(PIN, Solde) & Consultation du solde \\
+      80 & 20 & Debit(PIN, Montant, Solde) & Paiement en FCFA \\
+      80 & 30 & Credit(PIN, Montant, Solde) & Rechargement \\
+    \end{tabular}
+  \end{center}
+  \vspace{0.4cm}
+  \begin{block}{Codes retour}
+    9000 : succes \quad
+    6B01 : solde insuffisant \quad
+    6B02 : montant invalide \quad
+    6B03 : PIN incorrect \quad
+    6B04 : carte bloquee
+  \end{block}
+\end{frame}
+
+% --------------------------------------------------------------------
+\begin{frame}[fragile]{Securite du PIN}
+  \begin{columns}[T]
+    \begin{column}{0.50\textwidth}
+      \begin{itemize}
+        \item Le PIN est verifie dans la carte.
+        \item Les erreurs sont comptees en EEPROM.
+        \item Apres 3 erreurs : blocage.
+        \item Un PIN correct remet le compteur a zero.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+\begin{lstlisting}
+If PinSaisi <> PinCode Then
+    PinErrors = PinErrors + 1
+    If PinErrors >= MaxPinErrors Then
+        CarteBloquee = 1
+        SW1SW2 = swCardBlocked
+        Exit
+    End If
+    SW1SW2 = swInvalidPIN
+    Exit
+End If
+\end{lstlisting}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% --------------------------------------------------------------------
+\begin{frame}[fragile]{Paiement et ticket}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{Scenario}
+        \begin{itemize}
+          \item L'utilisateur saisit un montant.
+          \item Le terminal appelle \texttt{Debit}.
+          \item La carte retire le montant.
+          \item Le terminal imprime le ticket.
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.50\textwidth}
+\begin{lstlisting}
+---------- TICKET DE PAIEMENT ----------
+Pays      : Senegal
+Monnaie   : FCFA
+Montant   : 500 FCFA
+Statut    : Paiement accepte
+Nouveau solde : 9500 FCFA
+----------------------------------------
+\end{lstlisting}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% --------------------------------------------------------------------
+\begin{frame}{Demonstration}
+  \begin{enumerate}
+    \item Lancer \texttt{compiler.bat}.
+    \item Lancer \texttt{lancer.bat}.
+    \item Entrer le PIN \texttt{1234}.
+    \item Consulter le solde : \texttt{10000 FCFA}.
+    \item Payer \texttt{500 FCFA}.
+    \item Verifier le ticket et le nouveau solde.
+    \item Tester 3 mauvais PIN pour montrer le blocage.
+  \end{enumerate}
+\end{frame}
+
+% --------------------------------------------------------------------
+\begin{frame}{Resultats obtenus}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \begin{block}{Compilation}
+        \begin{itemize}
+          \item \texttt{bin/MaCarte.img}
+          \item \texttt{bin/MonTerminal.exe}
+          \item \texttt{bin/MonTerminal.img}
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{Simulation}
+        \begin{itemize}
+          \item Carte detectee.
+          \item PIN verifie.
+          \item Paiement en FCFA execute.
+          \item Ticket affiche.
+          \item Blocage PIN disponible.
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% --------------------------------------------------------------------
+\begin{frame}{Limites et ameliorations}
+  \begin{block}{Limites actuelles}
+    \begin{itemize}
+      \item Pas de chiffrement des transactions.
+      \item Pas d'historique complet des paiements.
+      \item Pas d'identite commercant/client stockee.
+      \item Pas de connexion bancaire reelle.
+    \end{itemize}
+  \end{block}
+  \begin{block}{Ameliorations possibles}
+    Ajouter un code administrateur, un historique EEPROM, le nom du client et le nom du commercant sur le ticket.
+  \end{block}
+\end{frame}
+
+% --------------------------------------------------------------------
+\begin{frame}[plain]
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[Ink] (current page.south west) rectangle (current page.north east);
+    \node[align=center,text=white] at (current page.center) {
+      {\Huge\bfseries Merci}\\[0.35cm]
+      {\large Questions ?}\\[0.65cm]
+      \tagbox{SenegalGreen}{BasicCard}
+      \hspace{0.2cm}
+      \tagbox{SenegalYellow}{FCFA}
+      \hspace{0.2cm}
+      \tagbox{SenegalRed}{Senegal}
+    };
+  \end{tikzpicture}
+\end{frame}
+
+\end{document}
