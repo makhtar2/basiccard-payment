@@ -1,38 +1,73 @@
-# Système de Paiement par Carte à Puce (Simulation BasicCard)
+# Systeme de paiement BasicCard en FCFA
 
-Ce projet est une simulation d'un écosystème de paiement électronique composé d'une **Carte à Puce virtuelle** et d'un **Terminal de Paiement**. Il a été réalisé à l'aide de la technologie **ZeitControl BasicCard**.
+Ce projet implemente un mini systeme de paiement adapte au Senegal avec une carte a puce programmable BasicCard, un terminal de paiement et des montants en francs CFA.
 
-## 📌 Aperçu du Projet
-L'objectif est de démontrer la communication sécurisée entre un objet portable (la carte) et un lecteur (le terminal) via un protocole de commandes/réponses.
+## Fonctionnalites
 
-### Composants
-1.  **MaCarte.bas** : Le logiciel embarqué dans la puce. Il gère le stockage sécurisé du solde en mémoire EEPROM et valide les transactions.
-2.  **MonTerminal.bas** : L'interface utilisateur. Il simule un lecteur de carte qui demande un montant, initie la communication et affiche le résultat (ticket de caisse).
+- Verification d'un code PIN.
+- Consultation du solde de la carte.
+- Debit d'un montant en FCFA lors d'un paiement.
+- Rechargement d'un montant en FCFA sur la carte.
+- Gestion des erreurs : PIN incorrect, montant invalide, solde insuffisant.
 
-## 🛠️ Fonctionnalités
-- **Solde Persistant** : La carte mémorise son solde même après "déconnexion" grâce à la variable `Eeprom`.
-- **Validation de Transaction** : Vérification automatique du solde avant chaque retrait.
-- **Retour d'Information** : Le terminal affiche le solde restant après chaque opération (réussie ou échouée).
-- **Codes de Statut (SW1SW2)** : Utilisation des standards de cartes à puce pour signaler le succès (`9000`) ou les erreurs (ex: `6100` pour solde insuffisant).
+## Structure
 
-## 🚀 Guide de Simulation
+- `src/card/MaCarte.bas` : programme embarque dans la carte.
+- `src/card/MaCarte.zcc` : configuration du projet carte BasicCard.
+- `src/terminal/MonTerminal.bas` : programme du terminal.
+- `compiler.bat` : compile la carte et le terminal.
+- `lancer.bat` : lance le simulateur puis le terminal.
+- `docs/explication-projet.md` : explication complete du projet.
+- `docs/protocole.md` : protocole APDU utilise entre le terminal et la carte.
+- `bin/` : fichiers generes par la compilation.
 
-### Prérequis
-- Windows avec le package **BasicCard Development Software** installé.
+## Prerequis
 
-### Étapes pour lancer le test
-1.  **Compiler la Carte** : Ouvrez `MaCarte.bas` dans l'IDE BasicCard et appuyez sur **F9**. Cela génère le fichier `MaCarte.img`.
-2.  **Compiler le Terminal** : Ouvrez `MonTerminal.bas` et appuyez sur **F9**.
-3.  **Lancer la simulation** :
-    - Exécutez le programme du terminal.
-    - Saisissez un montant dans la console (ex: `2000`).
-    - Le simulateur "insère" automatiquement la carte virtuelle.
-    - Observez le résultat de la transaction et le solde mis à jour.
+- Windows.
+- BasicCard Development Software installe, par defaut dans :
+  `C:\Program Files (x86)\BasicCardV7`
 
-## 📝 Structure du Code
-- `#include zc75.mcf` : Définit l'architecture de la puce cible.
-- `Command &H80 &H02` : Définit une instruction personnalisée pour le paiement.
-- `Call WaitForCard()` : Met le terminal en attente d'une insertion physique ou virtuelle.
+Si BasicCard est installe ailleurs, modifier la variable `BC_PATH` dans `compiler.bat` et `lancer.bat`.
 
----
-*Projet réalisé dans le cadre d'un exercice d'apprentissage des systèmes embarqués et de la programmation de cartes à puce.*
+## Compilation
+
+Double-cliquer sur :
+
+```bat
+compiler.bat
+```
+
+La compilation doit produire :
+
+- `bin\MaCarte.img`
+- `bin\MonTerminal.exe`
+- `bin\MonTerminal.img`
+
+## Execution
+
+Double-cliquer sur :
+
+```bat
+lancer.bat
+```
+
+Le script lance le simulateur BasicCard avec l'image de la carte et l'image du terminal.
+
+## Donnees de test
+
+- PIN par defaut : `1234`
+- Solde initial : `10000 FCFA`.
+- Les montants saisis dans le terminal sont directement en FCFA.
+
+Exemples :
+
+- `500` = 500 FCFA
+- `2500` = 2 500 FCFA
+- `10000` = 10 000 FCFA
+
+## Objectifs pedagogiques
+
+1. Comprendre la separation entre carte et terminal.
+2. Definir un protocole de commandes simple.
+3. Stocker des donnees persistantes dans l'EEPROM de la carte.
+4. Tester des transactions dans le simulateur BasicCard.
