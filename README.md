@@ -8,6 +8,8 @@ Ce projet implemente un mini systeme de paiement adapte au Senegal avec une cart
 - Consultation du solde de la carte.
 - Debit d'un montant en FCFA lors d'un paiement.
 - Rechargement d'un montant en FCFA sur la carte.
+- Blocage de la carte apres 3 mauvais codes PIN.
+- Ticket affiche apres un paiement accepte.
 - Gestion des erreurs : PIN incorrect, montant invalide, solde insuffisant.
 
 ## Structure
@@ -58,6 +60,7 @@ Le script lance le simulateur BasicCard avec l'image de la carte et l'image du t
 - PIN par defaut : `1234`
 - Solde initial : `10000 FCFA`.
 - Les montants saisis dans le terminal sont directement en FCFA.
+- Apres 3 mauvais PIN, la carte se bloque pendant la simulation.
 
 Exemples :
 

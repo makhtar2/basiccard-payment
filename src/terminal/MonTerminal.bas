@@ -10,6 +10,7 @@ Rem Codes retour personnalises envoyes par la carte.
 Const swInsufficientFunds = &H6B01
 Const swInvalidAmount = &H6B02
 Const swInvalidPIN = &H6B03
+Const swCardBlocked = &H6B04
 
 Rem Commandes APDU disponibles sur la carte.
 Rem Le terminal doit declarer les memes signatures que la carte.
@@ -26,6 +27,8 @@ Rem Traduit les codes techniques de la carte en messages comprehensibles.
 Sub AfficherErreur()
     If SW1SW2 = swInvalidPIN Then
         Print "Erreur : PIN incorrect."
+    ElseIf SW1SW2 = swCardBlocked Then
+        Print "Erreur : carte bloquee apres 3 mauvais PIN."
     ElseIf SW1SW2 = swInsufficientFunds Then
         Print "Erreur : solde insuffisant."
     ElseIf SW1SW2 = swInvalidAmount Then
@@ -35,17 +38,31 @@ Sub AfficherErreur()
     End If
 End Sub
 
+Rem Affiche un ticket simple apres un paiement accepte.
+Sub AfficherTicket(Montant As Long, Solde As Long)
+    Print ""
+    Print "---------- TICKET DE PAIEMENT ----------"
+    Print "Pays      : Senegal"
+    Print "Monnaie   : FCFA"
+    Print "Montant   : " + Str$(Montant) + " FCFA"
+    Print "Statut    : Paiement accepte"
+    Print "Nouveau solde : " + Str$(Solde) + " FCFA"
+    Print "----------------------------------------"
+End Sub
+
 Private CodePIN&
 Private ChoixMenu&
 Private MontantSaisi&
 Private SoldeCarte&
 Private Continuer&
+Private PinValide&
 Private Saisie$
 Private Len@
 
 ' Le simulateur BasicCard utilise le lecteur virtuel 201.
 ComPort = 201
 Continuer& = 1
+PinValide& = 0
 
 Print "--- TERMINAL DE PAIEMENT FCFA - SENEGAL ---"
 Print "Insertion de la carte..."
@@ -54,16 +71,22 @@ Call WaitForCard()
 Rem ResetCard initialise la carte avant l'envoi des commandes APDU.
 ResetCard
 
-Print "Entrez le code PIN : " ;
-Line Input Saisie$
-Rem Val! convertit le texte tape par l'utilisateur en nombre.
-CodePIN& = Val!(Saisie$, Len@)
-Call GetBalance(CodePIN&, SoldeCarte&)
+While PinValide& = 0
+    Print "Entrez le code PIN : " ;
+    Line Input Saisie$
+    Rem Val! convertit le texte tape par l'utilisateur en nombre.
+    CodePIN& = Val!(Saisie$, Len@)
+    Call GetBalance(CodePIN&, SoldeCarte&)
 
-If SW1SW2 <> &H9000 Then
-    Call AfficherErreur()
-    Exit
-End If
+    If SW1SW2 = &H9000 Then
+        PinValide& = 1
+    Else
+        Call AfficherErreur()
+        If SW1SW2 = swCardBlocked Then
+            Exit
+        End If
+    End If
+Wend
 
 Print "PIN accepte."
 Call AfficherSolde(SoldeCarte&)
@@ -91,8 +114,7 @@ While Continuer& = 1
         MontantSaisi& = Val!(Saisie$, Len@)
         Call Debit(CodePIN&, MontantSaisi&, SoldeCarte&)
         If SW1SW2 = &H9000 Then
-            Print "Paiement accepte."
-            Call AfficherSolde(SoldeCarte&)
+            Call AfficherTicket(MontantSaisi&, SoldeCarte&)
         Else
             Call AfficherErreur()
             Call AfficherSolde(SoldeCarte&)

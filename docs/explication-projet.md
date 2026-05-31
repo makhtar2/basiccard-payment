@@ -31,6 +31,8 @@ La carte expose trois commandes :
 - `Debit` : retirer un montant lors d'un paiement ;
 - `Credit` : ajouter un montant lors d'un rechargement.
 
+La carte gere aussi la securite du PIN. Apres trois mauvais codes PIN, elle passe en etat bloque et refuse les operations suivantes.
+
 ### `src/terminal/MonTerminal.bas`
 
 Ce fichier contient le programme du terminal. Il affiche un menu a l'utilisateur :
@@ -41,6 +43,8 @@ Ce fichier contient le programme du terminal. Il affiche un menu a l'utilisateur
 - quitter.
 
 Le terminal demande d'abord le PIN, puis envoie les commandes a la carte. Il affiche ensuite le resultat de l'operation.
+
+Apres un paiement accepte, le terminal affiche un ticket avec le pays, la monnaie, le montant paye, le statut et le nouveau solde.
 
 ### `compiler.bat`
 
@@ -64,6 +68,8 @@ Ce script lance la simulation. Il demarre `ZCMSim` avec la carte et le terminal.
 6. Choisir `3` pour recharger, par exemple `1000 FCFA`.
 7. Choisir `0` pour quitter.
 
+Pour tester la securite, relancer la simulation et saisir trois mauvais PIN. La carte affichera une erreur de blocage.
+
 ## Codes retour
 
 La carte renvoie des codes pour indiquer le resultat :
@@ -72,13 +78,13 @@ La carte renvoie des codes pour indiquer le resultat :
 - `6B01` : solde insuffisant ;
 - `6B02` : montant invalide ;
 - `6B03` : PIN incorrect.
+- `6B04` : carte bloquee apres 3 mauvais PIN.
 
 ## Limites du projet
 
 Ce projet est une simulation pedagogique. Il montre le principe d'une carte de paiement, mais il ne gere pas encore :
 
 - le chiffrement des transactions ;
-- le blocage apres plusieurs PIN incorrects ;
 - un historique des paiements ;
 - l'identite du commercant ;
 - une vraie connexion bancaire.
