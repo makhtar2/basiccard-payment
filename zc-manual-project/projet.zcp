@@ -1,0 +1,9 @@
+[Window Options]
+IOToolTipEnabled=true
+ShowRegisters=Auto
+
+[ZCC]
+0=[ ]card/MaCarte.zcc
+
+[ZCT]
+0=[ ]terminal/MonTerminal.zct
