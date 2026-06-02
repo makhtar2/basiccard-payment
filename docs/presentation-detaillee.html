@@ -2,728 +2,875 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
-  <title>Presentation detaillee - BasicCard FCFA</title>
+  <title>Présentation Détaillée - Système de paiement BasicCard</title>
   <style>
-    @page { size: 16in 9in; margin: 0; }
-    * { box-sizing: border-box; }
+    :root {
+      --primary: #007a3d;
+      --secondary: #fcd116;
+      --accent: #ce1126;
+      --text: #1a1c1e;
+      --text-muted: #5f6368;
+      --bg: #ffffff;
+      --bg-alt: #f8f9fa;
+      --border: #dadce0;
+      --shadow: 0 4px 12px rgba(0,0,0,0.05);
+      --font-main: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      --font-mono: 'Cascadia Code', 'Consolas', monospace;
+    }
+
+    @page {
+      size: 16in 9in;
+      margin: 0;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-print-color-adjust: exact;
+    }
+
     body {
       margin: 0;
-      font-family: "Segoe UI", Arial, sans-serif;
-      color: #10201a;
-      background: #edf3ef;
+      font-family: var(--font-main);
+      color: var(--text);
+      background: #525659;
     }
+
     .slide {
       width: 16in;
       height: 9in;
-      page-break-after: always;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      padding: 0.6in 0.8in;
       position: relative;
       overflow: hidden;
-      padding: .62in .78in;
-      background: #ffffff;
+      page-break-after: always;
+      margin: 20px auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
-    .slide:last-child { page-break-after: auto; }
-    .cover {
-      color: #fff;
-      background:
-        linear-gradient(90deg, #fcd116 0 14%, transparent 14% 86%, #ce1126 86% 100%),
-        linear-gradient(135deg, #007a3d, #043f25);
+
+    @media print {
+      body { background: none; }
+      .slide {
+        margin: 0;
+        box-shadow: none;
+        page-break-after: always;
+      }
+    }
+
+    .slide::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 6px;
+      background: linear-gradient(90deg, var(--primary) 33.33%, var(--secondary) 33.33% 66.66%, var(--accent) 66.66%);
+    }
+
+    h1 { font-size: 72px; margin: 0 0 20px; font-weight: 800; }
+    h2 {
+      font-size: 42px;
+      color: var(--primary);
+      margin: 0 0 35px;
+      font-weight: 700;
       display: flex;
       align-items: center;
-      justify-content: center;
-      text-align: center;
+    }
+    h2::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+      margin-left: 30px;
+    }
+
+    h3 {
+      font-size: 26px;
+      color: var(--text);
+      margin: 0 0 15px;
+      font-weight: 600;
+    }
+
+    p, li {
+      font-size: 22px;
+      line-height: 1.5;
+      color: var(--text-muted);
+    }
+
+    ul, ol { margin: 0; padding-left: 30px; }
+    li { margin-bottom: 12px; }
+
+    .grid { display: grid; gap: 30px; margin-top: 20px; }
+    .two-cols { grid-template-columns: 1fr 1fr; }
+    .three-cols { grid-template-columns: repeat(3, 1fr); }
+
+    .card {
+      background: var(--bg-alt);
+      padding: 30px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      display: flex;
       flex-direction: column;
     }
-    h1 {
-      font-size: 64px;
-      line-height: 1.04;
-      margin: 0 0 22px;
-      letter-spacing: 0;
-    }
-    h2 {
-      color: #007a3d;
-      font-size: 42px;
-      margin: 0 0 22px;
-      letter-spacing: 0;
-    }
-    h3 {
-      color: #007a3d;
-      margin: 0 0 10px;
-      font-size: 24px;
-    }
-    p, li {
-      font-size: 23px;
-      line-height: 1.34;
-    }
-    ul, ol {
-      margin: 0;
-      padding-left: 30px;
-    }
-    li { margin: 8px 0; }
-    small { font-size: 16px; }
-    .subtitle {
-      font-size: 28px;
-      margin: 0 0 36px;
-      max-width: 1000px;
-    }
-    .pill {
-      display: inline-block;
-      padding: 11px 18px;
-      border-radius: 8px;
-      background: #10201a;
-      color: #fff;
-      font-weight: 800;
-      margin: 0 6px;
-      font-size: 18px;
-    }
-    .grid { display: grid; gap: 22px; }
-    .two { grid-template-columns: 1fr 1fr; }
-    .three { grid-template-columns: repeat(3, 1fr); }
-    .four { grid-template-columns: repeat(4, 1fr); }
-    .card {
-      background: #eaf7ef;
-      border: 2px solid #c6e7d2;
-      border-left: 8px solid #007a3d;
-      border-radius: 8px;
-      padding: 22px;
-      min-height: 128px;
-    }
-    .dark {
-      background: #10201a;
-      color: #fff;
-      border-left-color: #fcd116;
-    }
-    .dark h3 { color: #fcd116; }
-    .red { border-left-color: #ce1126; }
-    .yellow { border-left-color: #fcd116; }
+    .card.dark { background: #1a1c1e; color: white; border: none; }
+    .card.dark h3 { color: var(--secondary); }
+    .card.dark p { color: rgba(255,255,255,0.8); }
+
     .metric {
-      background: #10201a;
-      color: #fff;
-      border-radius: 8px;
-      padding: 20px;
       text-align: center;
-      min-height: 135px;
+      padding: 25px;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
     }
-    .metric strong {
-      display: block;
-      color: #fcd116;
-      font-size: 33px;
-      margin-bottom: 6px;
+    .metric strong { display: block; font-size: 48px; color: var(--primary); margin-bottom: 5px; }
+    .metric span { font-size: 18px; color: var(--text-muted); font-weight: 500; }
+
+    pre {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 25px;
+      border-radius: 8px;
+      font-family: var(--font-mono);
+      font-size: 18px;
+      margin: 0;
+      overflow: hidden;
+      border: 1px solid #333;
     }
+
+    .ticket {
+      background: #fdfdfd;
+      border: 2px dashed var(--border);
+      padding: 30px;
+      font-family: var(--font-mono);
+      font-size: 20px;
+      color: #333;
+      border-radius: 4px;
+    }
+
     .footer {
       position: absolute;
-      left: .78in;
-      right: .78in;
-      bottom: .28in;
+      bottom: 0.4in;
+      left: 0.8in;
+      right: 0.8in;
       display: flex;
       justify-content: space-between;
-      color: #62766b;
-      font-size: 15px;
-      border-top: 1px solid #dbe8df;
-      padding-top: 9px;
+      font-size: 14px;
+      color: #999;
+      border-top: 1px solid #eee;
+      padding-top: 15px;
     }
-    .flow {
-      display: flex;
-      align-items: center;
+
+    .cover {
       justify-content: center;
-      gap: 20px;
-      margin-top: 32px;
-    }
-    .node {
-      width: 230px;
-      min-height: 118px;
-      background: #eaf7ef;
-      border: 3px solid #007a3d;
-      border-radius: 8px;
-      padding: 18px;
+      align-items: center;
       text-align: center;
-      font-size: 22px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
+      background: radial-gradient(circle at 10% 20%, rgba(0, 122, 61, 0.05) 0%, transparent 40%),
+                  radial-gradient(circle at 90% 80%, rgba(206, 17, 38, 0.05) 0%, transparent 40%),
+                  var(--bg);
     }
-    .arrow {
-      color: #ce1126;
-      font-size: 36px;
-      font-weight: 900;
+    .cover .subtitle { font-size: 28px; color: var(--text-muted); max-width: 900px; margin-bottom: 40px; }
+
+    .pill-container { display: flex; gap: 15px; justify-content: center; }
+    .pill {
+      padding: 10px 25px;
+      border-radius: 50px;
+      background: var(--bg-alt);
+      border: 1px solid var(--border);
+      font-weight: 600;
+      font-size: 18px;
+      color: var(--primary);
     }
+
     table {
-      border-collapse: collapse;
       width: 100%;
-      font-size: 20px;
-      border-radius: 8px;
+      border-collapse: collapse;
+      margin-top: 20px;
+      box-shadow: var(--shadow);
+      border-radius: 12px;
       overflow: hidden;
     }
-    th {
-      background: #007a3d;
-      color: #fff;
-      text-align: left;
-      padding: 13px 15px;
-    }
-    td {
-      padding: 13px 15px;
-      background: #f7fbf8;
-      border-bottom: 1px solid #d7e6dc;
-    }
-    pre {
-      margin: 0;
-      padding: 18px;
-      border-radius: 8px;
-      background: #101820;
-      color: #fff;
-      font: 18px/1.32 Consolas, "Courier New", monospace;
-      white-space: pre-wrap;
-    }
-    .ticket {
-      background: #101820;
-      color: white;
-      border-radius: 8px;
-      border-left: 8px solid #fcd116;
-      padding: 24px;
-      font: 22px/1.42 Consolas, "Courier New", monospace;
-      white-space: pre-wrap;
-    }
+    th { text-align: left; background: var(--bg-alt); padding: 18px; border-bottom: 2px solid var(--primary); font-size: 20px; }
+    td { padding: 18px; border-bottom: 1px solid var(--border); font-size: 18px; background: white; }
+
+    .flow { display: flex; align-items: center; justify-content: center; gap: 30px; margin: auto 0; }
+    .node { background: white; border: 2px solid var(--primary); padding: 25px; border-radius: 12px; text-align: center; min-width: 220px; box-shadow: var(--shadow); }
+    .arrow { font-size: 40px; color: var(--accent); font-weight: bold; }
+
+    .thanks { justify-content: center; align-items: center; text-align: center; }
+    .thanks h2 { font-size: 90px; color: var(--primary); margin-bottom: 20px; border: none; }
+    .thanks h2::after { display: none; }
+
     .note {
-      background: #fff8d6;
-      border-left: 8px solid #fcd116;
-      padding: 18px 22px;
-      border-radius: 8px;
+      margin-top: auto;
+      background: rgba(252, 209, 22, 0.1);
+      border-left: 4px solid var(--secondary);
+      padding: 15px 20px;
+      border-radius: 4px;
+      font-size: 18px;
+      color: var(--text);
+    }
+    .code-box {
+      font-family: var(--font-mono);
+      background: #f1f3f4;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 0.9em;
+      color: var(--accent);
+    }
+    .apdu-structure {
+      display: flex;
+      gap: 5px;
+      justify-content: center;
       margin-top: 20px;
     }
-    .note p { margin: 0; }
-    .thanks {
-      background: #10201a;
+    .apdu-part {
+      padding: 10px 15px;
+      background: var(--primary);
       color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      border-radius: 4px;
       text-align: center;
-      flex-direction: column;
+      font-family: var(--font-mono);
+      font-weight: bold;
     }
-    .thanks h2 { color: white; font-size: 74px; }
+    .apdu-part span {
+      display: block;
+      font-size: 12px;
+      font-weight: normal;
+      margin-top: 5px;
+      color: rgba(255,255,255,0.8);
+    }
   </style>
 </head>
 <body>
+
+  <!-- Slide 1 -->
   <section class="slide cover">
-    <h1>Systeme de paiement<br>BasicCard en FCFA</h1>
-    <p class="subtitle">Presentation detaillee : conception, fonctionnement, securite, compilation et demonstration</p>
-    <div>
-      <span class="pill">Carte a puce</span>
+    <h1>Système de paiement<br>BasicCard</h1>
+    <p class="subtitle">Présentation détaillée : conception, fonctionnement, sécurité, compilation et démonstration</p>
+    <div class="pill-container">
+      <span class="pill">Carte à puce</span>
       <span class="pill">Terminal</span>
-      <span class="pill">Senegal</span>
-      <span class="pill">FCFA</span>
+      <span class="pill">Simulation</span>
+      <span class="pill">Sécurité PIN</span>
     </div>
   </section>
 
+  <!-- Slide 2 -->
   <section class="slide">
-    <h2>Plan de la presentation</h2>
-    <div class="grid two">
+    <h2>Plan de la présentation</h2>
+    <div class="grid two-cols">
       <div class="card">
-        <h3>Partie 1 : comprendre le projet</h3>
+        <h3>Partie 1 : Comprendre le projet</h3>
         <ul>
-          <li>Contexte et probleme traite.</li>
-          <li>Objectifs pedagogiques et fonctionnels.</li>
-          <li>Technologies utilisees.</li>
-          <li>Architecture generale.</li>
+          <li>Contexte, objectifs et technologies</li>
+          <li>Architecture et organisation technique</li>
+          <li><strong>Le standard APDU : Communication Carte-Terminal</strong></li>
+          <li>Spécifications du protocole monétique</li>
         </ul>
       </div>
       <div class="card">
-        <h3>Partie 2 : expliquer la realisation</h3>
+        <h3>Partie 2 : Expliquer la réalisation</h3>
         <ul>
-          <li>Carte, terminal et protocole APDU.</li>
-          <li>PIN, solde, paiement et rechargement.</li>
-          <li>Compilation et simulation.</li>
-          <li>Tests, resultats et ameliorations.</li>
+          <li>Étapes de programmation (Carte/Terminal)</li>
+          <li>Compilation, Simulation et Tests</li>
+          <li>Difficultés, limites et perspectives</li>
         </ul>
       </div>
     </div>
-    <div class="note"><p><strong>Objectif oral :</strong> expliquer progressivement, comme si on partait d'un besoin reel jusqu'a la demonstration finale.</p></div>
-    <div class="footer"><span>Presentation detaillee</span><span>2</span></div>
+    <div class="footer"><span>Présentation Détaillée</span><span>2</span></div>
   </section>
 
+  <!-- Slide 3 -->
   <section class="slide">
-    <h2>Contexte general</h2>
-    <div class="grid two">
+    <h2>Contexte général</h2>
+    <div class="grid two-cols">
       <div class="card">
-        <h3>Paiement electronique</h3>
-        <p>Dans un systeme de paiement, une carte peut representer un moyen simple de stocker une valeur et d'autoriser des transactions.</p>
+        <h3>Paiement électronique</h3>
+        <p>Dans un système de paiement, une carte représente un moyen simple de stocker une valeur et d'autoriser des transactions sécurisées.</p>
       </div>
       <div class="card">
-        <h3>Adaptation locale</h3>
-        <p>Le projet est adapte au Senegal : les montants sont exprimes directement en francs CFA, sans centimes.</p>
+        <h3>Gestion des montants</h3>
+        <p>Le projet manipule des montants entiers dans une devise configurée (ici, le CFA). Pas de centimes pour simplifier la logique.</p>
       </div>
     </div>
-    <div class="grid three" style="margin-top:22px">
-      <div class="metric"><strong>FCFA</strong>Monnaie du projet</div>
-      <div class="metric"><strong>10000</strong>Solde initial</div>
-      <div class="metric"><strong>1234</strong>PIN de test</div>
+    <div class="grid three-cols" style="margin-top: 30px;">
+      <div class="metric"><strong>Entiers</strong><span>Type de données</span></div>
+      <div class="metric"><strong>10 000</strong><span>Solde initial</span></div>
+      <div class="metric"><strong>1234</strong><span>PIN par défaut</span></div>
     </div>
-    <div class="footer"><span>Presentation detaillee</span><span>3</span></div>
+    <div class="footer"><span>Présentation Détaillée</span><span>3</span></div>
   </section>
 
+  <!-- Slide 4 -->
   <section class="slide">
-    <h2>Probleme traite</h2>
+    <h2>Problème traité</h2>
     <div class="card dark">
       <h3>Question principale</h3>
-      <p>Comment simuler un paiement par carte a puce, en protegeant l'acces avec un code PIN et en gerant un solde en FCFA ?</p>
+      <p style="font-size: 32px; line-height: 1.3;">Comment simuler un paiement par carte à puce, en protégeant l'accès avec un code PIN et en gérant un solde stocké directement sur la carte ?</p>
     </div>
-    <div class="grid three" style="margin-top:24px">
-      <div class="card"><h3>Stocker</h3><p>La carte garde le solde meme apres une operation.</p></div>
-      <div class="card"><h3>Verifier</h3><p>Le PIN permet de s'assurer que l'utilisateur est autorise.</p></div>
-      <div class="card"><h3>Transiger</h3><p>Le terminal envoie des ordres de paiement ou de rechargement.</p></div>
+    <div class="grid three-cols" style="margin-top: 30px;">
+      <div class="card"><h3>Stocker</h3><p>La carte garde le solde même après une opération via l'EEPROM.</p></div>
+      <div class="card"><h3>Vérifier</h3><p>Le PIN permet de s'assurer que l'utilisateur est autorisé.</p></div>
+      <div class="card"><h3>Transiger</h3><p>Le terminal envoie des ordres de paiement contrôlés.</p></div>
     </div>
-    <div class="footer"><span>Presentation detaillee</span><span>4</span></div>
+    <div class="footer"><span>Présentation Détaillée</span><span>4</span></div>
   </section>
 
+  <!-- Slide 5 -->
   <section class="slide">
     <h2>Objectifs du projet</h2>
-    <div class="grid two">
+    <div class="grid two-cols">
       <div class="card">
         <h3>Objectifs techniques</h3>
         <ul>
-          <li>Programmer une carte BasicCard.</li>
-          <li>Definir des commandes entre carte et terminal.</li>
-          <li>Compiler la carte et le terminal.</li>
-          <li>Tester dans le simulateur ZCMSim.</li>
+          <li>Programmer une carte BasicCard</li>
+          <li>Définir des commandes APDU personnalisées</li>
+          <li>Maîtriser la compilation croisée</li>
+          <li>Valider dans le simulateur ZCMSim</li>
         </ul>
       </div>
       <div class="card">
         <h3>Objectifs utilisateur</h3>
         <ul>
-          <li>Saisir un PIN.</li>
-          <li>Consulter le solde.</li>
-          <li>Effectuer un paiement.</li>
-          <li>Recharger la carte.</li>
-          <li>Recevoir un ticket.</li>
+          <li>Saisie sécurisée du PIN</li>
+          <li>Consultation du solde en temps réel</li>
+          <li>Effectuer un paiement avec ticket</li>
+          <li>Rechargement de la carte</li>
         </ul>
       </div>
     </div>
-    <div class="footer"><span>Presentation detaillee</span><span>5</span></div>
+    <div class="footer"><span>Présentation Détaillée</span><span>5</span></div>
   </section>
 
+  <!-- Slide 6 -->
   <section class="slide">
-    <h2>Technologies utilisees</h2>
-    <div class="grid three">
+    <h2>Technologies utilisées</h2>
+    <div class="grid three-cols">
       <div class="card">
-        <h3>BasicCard</h3>
-        <p>Environnement de programmation pour cartes a puce programmables.</p>
+        <h3>BasicCard SDK</h3>
+        <p>Environnement de développement complet pour cartes à puce programmables.</p>
       </div>
       <div class="card">
         <h3>ZC-Basic</h3>
-        <p>Langage utilise pour ecrire le programme de la carte et du terminal.</p>
+        <p>Langage de haut niveau spécifique pour la logique carte et terminal.</p>
       </div>
       <div class="card">
         <h3>ZCMSim</h3>
-        <p>Simulateur permettant de tester sans carte physique.</p>
+        <p>Simulateur permettant de tester sans matériel physique (lecteur/carte).</p>
       </div>
     </div>
-    <div class="note"><p>Le projet reste volontairement simple pour se concentrer sur la logique carte-terminal.</p></div>
-    <div class="footer"><span>Presentation detaillee</span><span>6</span></div>
+    <div class="note">Le projet se concentre sur la logique métier plutôt que sur la complexité cryptographique.</div>
+    <div class="footer"><span>Présentation Détaillée</span><span>6</span></div>
   </section>
 
+  <!-- Slide 7 -->
   <section class="slide">
-    <h2>Architecture generale</h2>
+    <h2>Architecture générale</h2>
     <div class="flow">
-      <div class="node">Utilisateur<br><small>PIN + choix + montant</small></div>
-      <div class="arrow">-&gt;</div>
+      <div class="node">Utilisateur<br><small>PIN + Montant</small></div>
+      <div class="arrow">→</div>
       <div class="node">Terminal<br><small>MonTerminal.bas</small></div>
-      <div class="arrow">&lt;-&gt;</div>
+      <div class="arrow">↔</div>
       <div class="node">Carte<br><small>MaCarte.bas</small></div>
     </div>
-    <div class="card" style="margin-top:28px">
-      <h3>Role du simulateur</h3>
-      <p>ZCMSim joue le role de lecteur virtuel. Il connecte le terminal et la carte via le port virtuel 201.</p>
+    <div class="card" style="margin-top: 40px;">
+      <h3>Rôle du simulateur</h3>
+      <p>ZCMSim joue le rôle de lecteur virtuel. Il connecte le terminal et la carte via le port TCP virtuel 201.</p>
     </div>
-    <div class="footer"><span>Presentation detaillee</span><span>7</span></div>
+    <div class="footer"><span>Présentation Détaillée</span><span>7</span></div>
   </section>
 
+  <!-- Slide 8 -->
   <section class="slide">
-    <h2>Organisation des fichiers</h2>
+    <h2>Organisation technique</h2>
     <table>
-      <tr><th>Fichier</th><th>Role</th></tr>
-      <tr><td>src/card/MaCarte.bas</td><td>Code source de la carte : solde, PIN, debit, credit, blocage.</td></tr>
-      <tr><td>src/card/MaCarte.zcc</td><td>Configuration du projet carte pour BasicCard.</td></tr>
-      <tr><td>src/terminal/MonTerminal.bas</td><td>Code du terminal : menu, saisie, APDU, ticket.</td></tr>
-      <tr><td>compiler.bat</td><td>Compilation automatique dans le projet principal.</td></tr>
-      <tr><td>lancer.bat</td><td>Lancement automatique de la simulation.</td></tr>
-      <tr><td>zc-manual-project/</td><td>Copie propre pour compiler manuellement dans ZC.</td></tr>
+      <thead>
+        <tr><th>Composant</th><th>Rôle / Fichier</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>MaCarte.bas</code></td><td>Logique carte : Solde, PIN, Débit, Crédit, Blocage.</td></tr>
+        <tr><td><code>MonTerminal.bas</code></td><td>Interface terminal : Menu, Saisie, APDU, Ticket.</td></tr>
+        <tr><td><code>protocole.md</code></td><td>Spécification détaillée des commandes et codes retour.</td></tr>
+        <tr><td><code>Images (.img)</code></td><td>Binaires compilés pour la carte et le terminal.</td></tr>
+      </tbody>
     </table>
-    <div class="footer"><span>Presentation detaillee</span><span>8</span></div>
+    <div class="footer"><span>Présentation Détaillée</span><span>8</span></div>
   </section>
 
+  <!-- Slide 9: APDU Explanation -->
   <section class="slide">
-    <h2>Etape 1 : programmer la carte</h2>
-    <div class="grid two">
+    <h2>Application Protocol Data Unit (APDU)</h2>
+    <div class="grid two-cols">
       <div class="card">
-        <h3>Responsabilites de la carte</h3>
-        <ul>
-          <li>Conserver le solde.</li>
-          <li>Conserver le PIN.</li>
-          <li>Verifier les autorisations.</li>
-          <li>Refuser les operations invalides.</li>
-        </ul>
+        <h3>Qu'est-ce qu'un APDU ?</h3>
+        <p>L'<strong>APDU</strong> est l'unité de communication standard entre un terminal (lecteur) et une carte à puce (ISO/IEC 7816-4).</p>
+        <p>C'est un protocole de type <strong>Maître-Esclave</strong> : le terminal envoie une <em>Commande</em> et la carte répond par une <em>Réponse</em>.</p>
       </div>
-      <pre>Eeprom SoldeCompte As Long = 10000
-Eeprom PinCode As Long = 1234
-Eeprom PinErrors As Byte = 0
-Eeprom CarteBloquee As Byte = 0</pre>
-    </div>
-    <div class="note"><p><strong>EEPROM :</strong> memoire persistante de la carte. Elle sert a garder les donnees importantes.</p></div>
-    <div class="footer"><span>Presentation detaillee</span><span>9</span></div>
-  </section>
-
-  <section class="slide">
-    <h2>Etape 2 : definir les commandes carte</h2>
-    <table>
-      <tr><th>Commande</th><th>Instruction</th><th>Explication</th></tr>
-      <tr><td>GetBalance</td><td>80 10</td><td>Verifier le PIN puis renvoyer le solde.</td></tr>
-      <tr><td>Debit</td><td>80 20</td><td>Retirer un montant si le solde est suffisant.</td></tr>
-      <tr><td>Credit</td><td>80 30</td><td>Ajouter un montant positif au solde.</td></tr>
-    </table>
-    <div class="card" style="margin-top:24px">
-      <h3>Pourquoi des commandes ?</h3>
-      <p>La carte ne donne pas directement acces a ses variables. Le terminal doit passer par des commandes controlees.</p>
-    </div>
-    <div class="footer"><span>Presentation detaillee</span><span>10</span></div>
-  </section>
-
-  <section class="slide">
-    <h2>Etape 3 : verifier le PIN</h2>
-    <div class="grid two">
-      <div class="card">
-        <h3>Logique</h3>
+      <div class="card dark">
+        <h3>Cycle de vie</h3>
         <ol>
-          <li>Le terminal envoie le PIN.</li>
-          <li>La carte compare avec son PIN interne.</li>
-          <li>Si le PIN est faux, elle renvoie une erreur.</li>
-          <li>Si le PIN est correct, l'operation continue.</li>
+          <li>Le terminal formate une commande.</li>
+          <li>La carte traite l'instruction.</li>
+          <li>La carte renvoie des données (optionnel) et un <strong>Status Word</strong> (obligatoire).</li>
         </ol>
       </div>
-      <pre>If PinSaisi &lt;&gt; PinCode Then
-    SW1SW2 = swInvalidPIN
-    Exit
-End If</pre>
     </div>
-    <div class="footer"><span>Presentation detaillee</span><span>11</span></div>
+    <h3 style="margin-top: 30px; text-align: center;">Structure d'une Commande APDU</h3>
+    <div class="apdu-structure">
+      <div class="apdu-part">CLA<span>Classe (80)</span></div>
+      <div class="apdu-part">INS<span>Instruction</span></div>
+      <div class="apdu-part">P1<span>Param 1</span></div>
+      <div class="apdu-part">P2<span>Param 2</span></div>
+      <div class="apdu-part" style="background: var(--secondary); color: var(--text);">Lc / Data / Le<span>Données transmises</span></div>
+    </div>
+    <div class="footer"><span>Présentation Détaillée</span><span>9</span></div>
   </section>
 
+  <!-- Slide 10 -->
   <section class="slide">
-    <h2>Etape 4 : bloquer apres 3 erreurs</h2>
-    <div class="grid two">
-      <div class="card red">
-        <h3>But securitaire</h3>
-        <p>Le blocage evite qu'une personne essaie plusieurs PIN jusqu'a trouver le bon.</p>
-        <p>Apres 3 erreurs, la carte renvoie le code <strong>6B04</strong>.</p>
-      </div>
-      <pre>If PinSaisi &lt;&gt; PinCode Then
-    PinErrors = PinErrors + 1
-    If PinErrors &gt;= MaxPinErrors Then
-        CarteBloquee = 1
-        SW1SW2 = swCardBlocked
-        Exit
-    End If
-End If</pre>
-    </div>
-    <div class="footer"><span>Presentation detaillee</span><span>12</span></div>
-  </section>
-
-  <section class="slide">
-    <h2>Etape 5 : effectuer un paiement</h2>
-    <div class="grid two">
+    <h2>Protocole : Codes retour APDU</h2>
+    <div class="grid two-cols">
       <div class="card">
-        <h3>Conditions</h3>
+        <p>Le protocole utilise la classe <span class="code-box">80</span>. Chaque réponse se termine par un code d'état (SW1SW2) indiquant le succès ou l'échec de l'opération.</p>
+      </div>
+      <table>
+        <thead>
+          <tr><th>Code</th><th>Signification</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="code-box">9000</span></td><td>Opération réussie</td></tr>
+          <tr><td><span class="code-box">6B01</span></td><td>Solde insuffisant</td></tr>
+          <tr><td><span class="code-box">6B02</span></td><td>Montant invalide</td></tr>
+          <tr><td><span class="code-box">6B03</span></td><td>PIN incorrect</td></tr>
+          <tr><td><span class="code-box">6B04</span></td><td>Carte bloquée (3 erreurs)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="footer"><span>Présentation Détaillée</span><span>10</span></div>
+  </section>
+
+  <!-- Slide 11 -->
+  <section class="slide">
+    <h2>Protocole : Commandes (1/2)</h2>
+    <div class="grid two-cols">
+      <div class="card">
+        <h3>Consultation du solde</h3>
         <ul>
-          <li>La carte ne doit pas etre bloquee.</li>
-          <li>Le PIN doit etre correct.</li>
-          <li>Le montant doit etre positif.</li>
-          <li>Le solde doit etre suffisant.</li>
+          <li><strong>CLA :</strong> <span class="code-box">80</span> | <strong>INS :</strong> <span class="code-box">10</span></li>
+          <li><strong>Entrée :</strong> <code>PinSaisi As Long</code></li>
+          <li><strong>Sortie :</strong> <code>Solde As Long</code></li>
+        </ul>
+        <p><small>La carte renvoie le solde uniquement si le PIN est correct.</small></p>
+      </div>
+      <div class="card">
+        <h3>Débit (Paiement)</h3>
+        <ul>
+          <li><strong>CLA :</strong> <span class="code-box">80</span> | <strong>INS :</strong> <span class="code-box">20</span></li>
+          <li><strong>Entrée :</strong> <code>Pin, Montant</code></li>
+          <li><strong>Sortie :</strong> <code>NouveauSolde</code></li>
+        </ul>
+        <p><small>Refus si PIN incorrect, montant négatif ou solde insuffisant.</small></p>
+      </div>
+    </div>
+    <div class="footer"><span>Présentation Détaillée</span><span>11</span></div>
+  </section>
+
+  <!-- Slide 12 -->
+  <section class="slide">
+    <h2>Protocole : Commandes (2/2)</h2>
+    <div class="grid two-cols">
+      <div class="card">
+        <h3>Crédit (Rechargement)</h3>
+        <ul>
+          <li><strong>CLA :</strong> <span class="code-box">80</span> | <strong>INS :</strong> <span class="code-box">30</span></li>
+          <li><strong>Entrée :</strong> <code>Pin, Montant</code></li>
+          <li><strong>Sortie :</strong> <code>NouveauSolde</code></li>
+        </ul>
+        <p><small>Ajoute le montant si le PIN est correct et le montant strictement positif.</small></p>
+      </div>
+      <div class="card">
+        <h3>Logique de blocage</h3>
+        <p>Chaque mauvais PIN augmente le compteur <code>PinErrors</code>. À la 3ème erreur, <code>CarteBloquee</code> passe à 1.</p>
+        <p><strong>Note :</strong> Un PIN correct remet le compteur à zéro.</p>
+      </div>
+    </div>
+    <div class="footer"><span>Présentation Détaillée</span><span>12</span></div>
+  </section>
+
+  <!-- Slide 13 -->
+  <section class="slide">
+    <h2>Protocole : Variables persistantes</h2>
+    <div class="card">
+      <p>La carte stocke quatre valeurs clés en mémoire <strong>EEPROM</strong>, garantissant leur survie hors tension :</p>
+    </div>
+    <div class="grid two-cols" style="margin-top: 20px;">
+      <table>
+        <thead><tr><th>Variable</th><th>Rôle</th><th>Valeur Initiale</th></tr></thead>
+        <tbody>
+          <tr><td><code>SoldeCompte</code></td><td>Solde en FCFA</td><td>10 000</td></tr>
+          <tr><td><code>PinCode</code></td><td>Code secret</td><td>1234</td></tr>
+        </tbody>
+      </table>
+      <table>
+        <thead><tr><th>Variable</th><th>Rôle</th><th>Valeur Initiale</th></tr></thead>
+        <tbody>
+          <tr><td><code>PinErrors</code></td><td>Compteur d'erreurs</td><td>0</td></tr>
+          <tr><td><code>CarteBloquee</code></td><td>Statut de blocage</td><td>0 (Non)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="footer"><span>Présentation Détaillée</span><span>13</span></div>
+  </section>
+
+  <!-- Slide 14 -->
+  <section class="slide">
+    <h2>Étape 1 : Programmer la carte</h2>
+    <div class="grid two-cols">
+      <div class="card">
+        <h3>Implémentation</h3>
+        <p>Le code source définit comment la carte réagit aux commandes INS reçues du terminal.</p>
+        <ul>
+          <li>Lecture/Écriture sécurisée EEPROM</li>
+          <li>Calcul du nouveau solde</li>
+          <li>Émission des codes SW1SW2</li>
         </ul>
       </div>
-      <pre>If Montant &gt; SoldeCompte Then
-    SW1SW2 = swInsufficientFunds
-    Exit
-End If
-
-SoldeCompte = SoldeCompte - Montant
-NouveauSolde = SoldeCompte</pre>
+      <pre>
+' Exemple de structure
+Case &H20 ' Commande DEBIT
+  If Pin &lt;&gt; PinCode Then
+    SW1SW2 = &H6B03 : Exit
+  End If
+  Solde = Solde - Montant
+  SW1SW2 = &H9000</pre>
     </div>
-    <div class="footer"><span>Presentation detaillee</span><span>13</span></div>
+    <div class="footer"><span>Présentation Détaillée</span><span>14</span></div>
   </section>
 
+  <!-- Slide 15 -->
   <section class="slide">
-    <h2>Etape 6 : recharger la carte</h2>
-    <div class="grid two">
+    <h2>Étape 2 : Définir les commandes</h2>
+    <div class="card">
+      <p>La définition des commandes passe par la structure <code>Command Part</code> dans le terminal et <code>Command Process</code> dans la carte.</p>
+    </div>
+    <div class="grid three-cols" style="margin-top: 30px;">
+      <div class="metric"><strong>80 10</strong><span>Solde</span></div>
+      <div class="metric"><strong>80 20</strong><span>Débit</span></div>
+      <div class="metric"><strong>80 30</strong><span>Crédit</span></div>
+    </div>
+    <div class="note">L'utilisation du type <strong>Long</strong> (4 octets) permet de gérer des montants jusqu'à 2 milliards de FCFA.</div>
+    <div class="footer"><span>Présentation Détaillée</span><span>15</span></div>
+  </section>
+
+  <!-- Slide 16 -->
+  <section class="slide">
+    <h2>Étape 3 : Vérifier le PIN</h2>
+    <div class="grid two-cols">
       <div class="card">
-        <h3>Principe</h3>
-        <p>Le rechargement ajoute un montant au solde. Dans ce projet, il est aussi protege par le PIN.</p>
+        <h3>Algorithme de contrôle</h3>
+        <ol>
+          <li>Réception du PIN</li>
+          <li>Comparaison immédiate</li>
+          <li>Incrémentation compteur si échec</li>
+          <li>Remise à zéro si succès</li>
+        </ol>
       </div>
-      <pre>If Montant &lt;= 0 Then
-    SW1SW2 = swInvalidAmount
-    Exit
-End If
-
-SoldeCompte = SoldeCompte + Montant
-NouveauSolde = SoldeCompte</pre>
+      <div class="card dark">
+        <h3>Code d'erreur : 6B03</h3>
+        <p>Indique spécifiquement au terminal que le PIN est erroné, permettant d'afficher un message adapté à l'utilisateur.</p>
+      </div>
     </div>
-    <div class="note"><p>Dans un vrai systeme, le rechargement serait reserve a un terminal autorise ou a une banque.</p></div>
-    <div class="footer"><span>Presentation detaillee</span><span>14</span></div>
+    <div class="footer"><span>Présentation Détaillée</span><span>16</span></div>
   </section>
 
+  <!-- Slide 17 -->
   <section class="slide">
-    <h2>Etape 7 : programmer le terminal</h2>
-    <div class="grid two">
+    <h2>Étape 4 : Bloquer après 3 erreurs</h2>
+    <div class="grid two-cols">
+      <div class="card" style="border-left: 6px solid var(--accent);">
+        <h3>Sécurité Anti-Brute-Force</h3>
+        <p>Une fois bloquée, la carte ne peut plus être débloquée par l'utilisateur simple.</p>
+        <p>Toute commande protégée renverra systématiquement <span class="code-box">6B04</span>.</p>
+      </div>
+      <pre>
+' Logique de blocage
+PinErrors = PinErrors + 1
+If PinErrors >= 3 Then
+    CarteBloquee = 1
+    SW1SW2 = &H6B04
+End If</pre>
+    </div>
+    <div class="footer"><span>Présentation Détaillée</span><span>17</span></div>
+  </section>
+
+  <!-- Slide 18 -->
+  <section class="slide">
+    <h2>Étape 5 : Effectuer un paiement</h2>
+    <div class="grid two-cols">
       <div class="card">
-        <h3>Role du terminal</h3>
+        <h3>Vérifications préalables</h3>
         <ul>
-          <li>Demander le PIN.</li>
-          <li>Afficher le menu.</li>
-          <li>Lire le choix de l'utilisateur.</li>
-          <li>Envoyer les commandes a la carte.</li>
-          <li>Afficher le resultat.</li>
+          <li>Montant <= SoldeCompte ?</li>
+          <li>Montant > 0 ?</li>
+          <li>Carte non bloquée ?</li>
         </ul>
       </div>
-      <pre>Print "1 - Consulter le solde"
-Print "2 - Effectuer un paiement en FCFA"
-Print "3 - Recharger la carte en FCFA"
-Print "0 - Quitter"</pre>
+      <pre>
+If Montant > SoldeCompte Then
+    SW1SW2 = &H6B01 ' Insuffisant
+    Exit
+End If
+' Retrait effectif
+SoldeCompte = SoldeCompte - Montant</pre>
     </div>
-    <div class="footer"><span>Presentation detaillee</span><span>15</span></div>
+    <div class="footer"><span>Présentation Détaillée</span><span>18</span></div>
   </section>
 
+  <!-- Slide 19 -->
   <section class="slide">
-    <h2>Etape 8 : connecter au simulateur</h2>
-    <div class="grid two">
+    <h2>Étape 6 : Recharger la carte</h2>
+    <div class="grid two-cols">
       <div class="card">
-        <h3>Port virtuel</h3>
-        <p>Le terminal utilise le port virtuel <strong>201</strong>, qui correspond au lecteur simule par ZCMSim.</p>
+        <h3>Processus de Crédit</h3>
+        <p>L'opération ajoute une valeur au solde EEPROM. Cette fonction simule un rechargement en borne ou en agence.</p>
       </div>
-      <pre>ComPort = 201
+      <pre>
+If Montant <= 0 Then
+    SW1SW2 = &H6B02 ' Invalide
+    Exit
+End If
+' Ajout effectif
+SoldeCompte = SoldeCompte + Montant</pre>
+    </div>
+    <div class="footer"><span>Présentation Détaillée</span><span>19</span></div>
+  </section>
+
+  <!-- Slide 20 -->
+  <section class="slide">
+    <h2>Étape 7 : Programmer le terminal</h2>
+    <div class="grid two-cols">
+      <div class="card">
+        <h3>Interface Homme-Machine</h3>
+        <ul>
+          <li>Menu interactif textuel</li>
+          <li>Affichage des montants en CFA</li>
+          <li>Masquage (partiel) du PIN saisi</li>
+          <li>Formatage du ticket</li>
+        </ul>
+      </div>
+      <pre>
+' Côté Terminal
+Print "SOLDE ACTUEL : "; 
+Call GetBalance(PIN, Solde)
+Print Solde; " CFA"</pre>
+    </div>
+    <div class="footer"><span>Présentation Détaillée</span><span>20</span></div>
+  </section>
+
+  <!-- Slide 21 -->
+  <section class="slide">
+    <h2>Étape 8 : Connecter au simulateur</h2>
+    <div class="grid two-cols">
+      <div class="card">
+        <h3>Configuration Port 201</h3>
+        <p>ZCMSim écoute sur le port 201. Le terminal doit être configuré pour appeler ce "lecteur virtuel" au démarrage.</p>
+      </div>
+      <pre>
+' Initialisation terminal
+ComPort = 201
 Call WaitForCard()
 ResetCard</pre>
     </div>
-    <div class="note"><p><strong>Important :</strong> sans <code>ResetCard</code>, la carte peut etre detectee mais pas initialisee.</p></div>
-    <div class="footer"><span>Presentation detaillee</span><span>16</span></div>
+    <div class="note">Le terminal attend que la carte soit "insérée" dans le simulateur avant de continuer.</div>
+    <div class="footer"><span>Présentation Détaillée</span><span>21</span></div>
   </section>
 
+  <!-- Slide 22 -->
   <section class="slide">
-    <h2>Etape 9 : afficher un ticket</h2>
-    <div class="grid two">
+    <h2>Étape 9 : Afficher un ticket</h2>
+    <div class="grid two-cols">
       <div class="card">
-        <h3>Pourquoi un ticket ?</h3>
-        <p>Le ticket rend la transaction lisible : il montre le montant paye, le statut et le nouveau solde.</p>
+        <h3>Lisibilité</h3>
+        <p>Un ticket propre confirme la transaction. Il est généré après réception du code <span class="code-box">9000</span> de la carte.</p>
       </div>
-      <div class="ticket">---------- TICKET DE PAIEMENT ----------
-Pays      : Senegal
-Monnaie   : FCFA
-Montant   : 500 FCFA
-Statut    : Paiement accepte
-Nouveau solde : 9500 FCFA
-----------------------------------------</div>
+      <div class="ticket">
+        ========================<br>
+        &nbsp;&nbsp;&nbsp;TICKET DE PAIEMENT<br>
+        ========================<br>
+        MONTANT : 500 CFA<br>
+        STATUT  : OPÉRATION RÉUSSIE<br>
+        SOLDE   : 9 500 CFA<br>
+        ========================
+      </div>
     </div>
-    <div class="footer"><span>Presentation detaillee</span><span>17</span></div>
+    <div class="footer"><span>Présentation Détaillée</span><span>22</span></div>
   </section>
 
+  <!-- Slide 23 -->
   <section class="slide">
-    <h2>Etape 10 : comprendre les fichiers .zcc et .zct</h2>
-    <div class="grid two">
+    <h2>Étape 10 : Fichiers projets (.zcc/.zct)</h2>
+    <div class="grid two-cols">
       <div class="card">
-        <h3>.zcc</h3>
-        <p>Fichier projet de la carte. Il indique quel fichier source compiler et quel modele BasicCard utiliser.</p>
+        <h3>MaCarte.zcc</h3>
+        <p>Contient les directives de compilation pour la puce BasicCard ciblée.</p>
       </div>
       <div class="card">
-        <h3>.zct</h3>
-        <p>Fichier projet du terminal. Il garde les options du terminal, dont le port virtuel utilise.</p>
+        <h3>MonTerminal.zct</h3>
+        <p>Contient les réglages de l'interface et du port de communication.</p>
       </div>
     </div>
-    <pre style="margin-top:22px">[Compiler]
-SourceFile=MaCarte.bas
-
-[Card Reader]
-VirtualReader=201</pre>
-    <div class="footer"><span>Presentation detaillee</span><span>18</span></div>
+    <div class="footer"><span>Présentation Détaillée</span><span>23</span></div>
   </section>
 
+  <!-- Slide 24 -->
   <section class="slide">
-    <h2>Etape 11 : compilation</h2>
-    <div class="grid two">
+    <h2>Étape 11 : Compilation des images</h2>
+    <div class="grid two-cols">
       <div class="card">
-        <h3>Compilation carte</h3>
-        <p>Le fichier <strong>MaCarte.bas</strong> est compile pour produire une image carte <strong>MaCarte.img</strong>.</p>
+        <h3>ZCMBasic</h3>
+        <p>Le compilateur transforme le code .bas en image binaire .img exécutable par la puce (carte) ou par la machine (terminal).</p>
       </div>
-      <div class="card">
-        <h3>Compilation terminal</h3>
-        <p>Le fichier <strong>MonTerminal.bas</strong> est compile pour produire une image terminal <strong>MonTerminal.img</strong>.</p>
+      <div class="flow">
+        <div class="node">Source .bas</div>
+        <div class="arrow">→</div>
+        <div class="node">Image .img</div>
       </div>
     </div>
-    <div class="flow">
-      <div class="node">MaCarte.bas</div><div class="arrow">-&gt;</div><div class="node">MaCarte.img</div>
-      <div class="node">MonTerminal.bas</div><div class="arrow">-&gt;</div><div class="node">MonTerminal.img</div>
-    </div>
-    <div class="footer"><span>Presentation detaillee</span><span>19</span></div>
+    <div class="footer"><span>Présentation Détaillée</span><span>24</span></div>
   </section>
 
+  <!-- Slide 25 -->
   <section class="slide">
-    <h2>Etape 12 : lancement de la simulation</h2>
-    <div class="card">
-      <h3>Commande equivalente</h3>
-      <p>Apres compilation, on lance le simulateur avec la carte et le terminal.</p>
+    <h2>Étape 12 : Lancement de la simulation</h2>
+    <div class="card dark">
+      <h3>Démarrage coordonné</h3>
+      <p>1. Lancer ZCMSim avec l'image de la carte.<br>2. Lancer le terminal configuré sur le port 201.</p>
     </div>
-    <pre style="margin-top:22px">ZCMSim.exe -P201 -CMaCarte MonTerminal.img</pre>
-    <div class="note"><p>Cette commande doit etre lancee depuis le dossier contenant <code>MaCarte.img</code> et <code>MonTerminal.img</code>.</p></div>
-    <div class="footer"><span>Presentation detaillee</span><span>20</span></div>
+    <div class="grid three-cols" style="margin-top: 40px;">
+      <div class="metric"><strong>ZCMSim</strong><span>Serveur</span></div>
+      <div class="metric"><strong>Lien TCP</strong><span>Protocole</span></div>
+      <div class="metric"><strong>Terminal</strong><span>Client</span></div>
+    </div>
+    <div class="footer"><span>Présentation Détaillée</span><span>25</span></div>
   </section>
 
+  <!-- Slide 26 -->
   <section class="slide">
-    <h2>Scenario de demonstration</h2>
-    <div class="grid two">
+    <h2>Scénarios de test</h2>
+    <div class="grid two-cols">
       <div class="card">
-        <h3>Demonstration normale</h3>
+        <h3>Démonstration standard</h3>
         <ol>
-          <li>Lancer la simulation.</li>
-          <li>Entrer le PIN 1234.</li>
-          <li>Consulter le solde.</li>
-          <li>Payer 500 FCFA.</li>
-          <li>Lire le ticket.</li>
-          <li>Verifier le nouveau solde.</li>
+          <li>PIN 1234 -> OK</li>
+          <li>Achat 500 CFA -> Ticket généré</li>
+          <li>Rechargement 1000 CFA -> Solde OK</li>
         </ol>
       </div>
-      <div class="card red">
-        <h3>Demonstration securite</h3>
+      <div class="card" style="border-left: 6px solid var(--accent);">
+        <h3>Sécurité</h3>
         <ol>
-          <li>Relancer la simulation.</li>
-          <li>Saisir un mauvais PIN.</li>
-          <li>Repeter 3 fois.</li>
-          <li>Montrer la carte bloquee.</li>
+          <li>3 mauvais PIN -> <span class="code-box">6B04</span></li>
+          <li>Solde 100 CFA, Achat 500 -> <span class="code-box">6B01</span></li>
         </ol>
       </div>
     </div>
-    <div class="footer"><span>Presentation detaillee</span><span>21</span></div>
+    <div class="footer"><span>Présentation Détaillée</span><span>26</span></div>
   </section>
 
+  <!-- Slide 27 -->
   <section class="slide">
-    <h2>Tests effectues</h2>
+    <h2>Tests et Résultats</h2>
     <table>
-      <tr><th>Test</th><th>Resultat attendu</th><th>Interet</th></tr>
-      <tr><td>PIN correct</td><td>Acces au menu</td><td>Verifier l'authentification.</td></tr>
-      <tr><td>PIN incorrect</td><td>Erreur PIN</td><td>Verifier la securite.</td></tr>
-      <tr><td>3 mauvais PIN</td><td>Carte bloquee</td><td>Verifier le blocage.</td></tr>
-      <tr><td>Paiement 500 FCFA</td><td>Solde diminue</td><td>Verifier le debit.</td></tr>
-      <tr><td>Paiement trop grand</td><td>Solde insuffisant</td><td>Verifier le controle du solde.</td></tr>
-      <tr><td>Rechargement 1000 FCFA</td><td>Solde augmente</td><td>Verifier le credit.</td></tr>
+      <thead>
+        <tr><th>Cas de test</th><th>Attendu</th><th>Code SW</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>PIN Correct</td><td>Accès menu</td><td><span class="code-box">9000</span></td></tr>
+        <tr><td>PIN Erroné</td><td>Erreur affichée</td><td><span class="code-box">6B03</span></td></tr>
+        <tr><td>Fonds Insuffisants</td><td>Achat refusé</td><td><span class="code-box">6B01</span></td></tr>
+        <tr><td>Montant Négatif</td><td>Action bloquée</td><td><span class="code-box">6B02</span></td></tr>
+      </tbody>
     </table>
-    <div class="footer"><span>Presentation detaillee</span><span>22</span></div>
+    <div class="footer"><span>Présentation Détaillée</span><span>27</span></div>
   </section>
 
+  <!-- Slide 28 -->
   <section class="slide">
-    <h2>Resultats obtenus</h2>
-    <div class="grid three">
-      <div class="metric"><strong>OK</strong>Compilation carte</div>
-      <div class="metric"><strong>OK</strong>Compilation terminal</div>
-      <div class="metric"><strong>OK</strong>Simulation ZCMSim</div>
-    </div>
-    <div class="grid two" style="margin-top:24px">
-      <div class="card"><h3>Fonctionnel</h3><p>Le solde, le paiement, le rechargement et le ticket fonctionnent dans la simulation.</p></div>
-      <div class="card"><h3>Securite</h3><p>Le PIN est controle et la carte se bloque apres 3 erreurs.</p></div>
-    </div>
-    <div class="footer"><span>Presentation detaillee</span><span>23</span></div>
-  </section>
-
-  <section class="slide">
-    <h2>Difficultes rencontrees</h2>
-    <div class="grid two">
+    <h2>Difficultés et Limites</h2>
+    <div class="grid two-cols">
       <div class="card">
-        <h3>Port virtuel</h3>
-        <p>Le terminal devait utiliser le port 201. Avec un mauvais port, le simulateur renvoyait une erreur de communication.</p>
-      </div>
-      <div class="card">
-        <h3>Reset de la carte</h3>
-        <p>Il fallait appeler <strong>ResetCard</strong> apres la detection, sinon la carte etait presente mais pas initialisee.</p>
-      </div>
-      <div class="card">
-        <h3>Mode de lancement</h3>
-        <p>Le simulateur doit recevoir la carte et le terminal ensemble pour que la carte soit inseree dans le lecteur virtuel.</p>
-      </div>
-      <div class="card">
-        <h3>Compilation</h3>
-        <p>Le compilateur console utile est <strong>ZCMBasic.exe</strong>, tandis que certains outils ouvrent plutot une interface graphique.</p>
-      </div>
-    </div>
-    <div class="footer"><span>Presentation detaillee</span><span>24</span></div>
-  </section>
-
-  <section class="slide">
-    <h2>Limites du projet</h2>
-    <div class="grid two">
-      <div class="card red">
-        <h3>Limites techniques</h3>
+        <h3>Difficultés techniques</h3>
         <ul>
-          <li>Pas de chiffrement des commandes.</li>
-          <li>Pas de vrai lecteur physique.</li>
-          <li>Pas de connexion bancaire.</li>
+          <li>Configuration du port virtuel 201</li>
+          <li>Gestion du ResetCard à l'insertion</li>
+          <li>Formatage des types Long en APDU</li>
         </ul>
       </div>
-      <div class="card yellow">
-        <h3>Limites fonctionnelles</h3>
+      <div class="card" style="border-left: 6px solid var(--secondary);">
+        <h3>Limites actuelles</h3>
         <ul>
-          <li>Pas d'historique complet.</li>
-          <li>Pas de nom client.</li>
-          <li>Pas de nom commercant.</li>
-          <li>Pas de deblocage administrateur.</li>
+          <li>Communication en clair (sans SSL/TLS)</li>
+          <li>Pas de journalisation historique</li>
+          <li>Interface console uniquement</li>
         </ul>
       </div>
     </div>
-    <div class="footer"><span>Presentation detaillee</span><span>25</span></div>
+    <div class="footer"><span>Présentation Détaillée</span><span>28</span></div>
   </section>
 
+  <!-- Slide 29 -->
   <section class="slide">
-    <h2>Ameliorations possibles</h2>
-    <div class="grid two">
+    <h2>Améliorations futures</h2>
+    <div class="grid two-cols">
       <div class="card">
-        <h3>Version suivante</h3>
+        <h3>Fonctionnel (V2)</h3>
         <ul>
-          <li>Ajouter un historique des transactions.</li>
-          <li>Ajouter le nom du client.</li>
-          <li>Ajouter le nom du commercant.</li>
-          <li>Ajouter un code administrateur.</li>
+          <li>Historique des 5 derniers achats</li>
+          <li>Nom du porteur sur la carte</li>
+          <li>Gestion de plusieurs PIN (Admin/User)</li>
         </ul>
       </div>
       <div class="card">
-        <h3>Version avancee</h3>
+        <h3>Sécurité (V3)</h3>
         <ul>
-          <li>Chiffrer les commandes.</li>
-          <li>Utiliser des cles de securite.</li>
-          <li>Connecter a une base de donnees.</li>
-          <li>Produire un vrai ticket imprime.</li>
+          <li>Chiffrement Triple-DES ou AES</li>
+          <li>Certificats de transaction signés</li>
+          <li>Authentification mutuelle Terminal-Carte</li>
         </ul>
       </div>
     </div>
-    <div class="footer"><span>Presentation detaillee</span><span>26</span></div>
+    <div class="footer"><span>Présentation Détaillée</span><span>29</span></div>
   </section>
 
+  <!-- Slide 30 -->
   <section class="slide">
     <h2>Conclusion</h2>
     <div class="card dark">
-      <h3>Ce que le projet montre</h3>
-      <p>Le projet montre comment une carte a puce peut stocker un solde, verifier un PIN, accepter un paiement, refuser une operation invalide et communiquer avec un terminal.</p>
+      <h3>Ce que le projet démontre</h3>
+      <p>L'efficacité des cartes à puce pour stocker de la valeur de manière autonome et sécurisée, tout en assurant un contrôle strict des accès via le protocole APDU.</p>
     </div>
-    <div class="grid three" style="margin-top:24px">
-      <div class="metric"><strong>Carte</strong>Donnees securisees</div>
-      <div class="metric"><strong>Terminal</strong>Interface utilisateur</div>
-      <div class="metric"><strong>APDU</strong>Communication controlee</div>
+    <div class="grid three-cols" style="margin-top: 40px;">
+      <div class="metric"><strong>Carte</strong><span>Données Sûres</span></div>
+      <div class="metric"><strong>APDU</strong><span>Standard</span></div>
+      <div class="metric"><strong>Logiciel</strong><span>Maîtrisé</span></div>
     </div>
-    <div class="footer"><span>Presentation detaillee</span><span>27</span></div>
+    <div class="footer"><span>Présentation Détaillée</span><span>30</span></div>
   </section>
 
+  <!-- Slide 31 -->
   <section class="slide thanks">
-    <h2>Merci</h2>
-    <p>Questions ?</p>
-    <div>
-      <span class="pill">BasicCard</span>
-      <span class="pill">FCFA</span>
-      <span class="pill">Senegal</span>
-      <span class="pill">Paiement securise</span>
+    <h2>Merci de votre attention</h2>
+    <p style="font-size: 32px;">Avez-vous des questions ?</p>
+    <div class="pill-container" style="margin-top: 40px;">
+      <span class="pill">BasicCard SDK</span>
+      <span class="pill">Monétique FCFA</span>
+      <span class="pill">Simulation</span>
     </div>
+    <div class="footer"><span>Présentation Détaillée</span><span>31</span></div>
   </section>
+
 </body>
 </html>
